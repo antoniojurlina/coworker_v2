@@ -1,0 +1,9 @@
+python-dotenv
+numpy
+pandas
+psycopg2
+aiohttp
+tiktoken
+fastapi
+pydantic
+uvicorn

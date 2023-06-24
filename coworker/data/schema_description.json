@@ -1,0 +1,593 @@
+{
+    "enums": [],
+    "tables": [
+        {
+            "name": "companies",
+            "description": "Table 'companies' includes all companies in database",
+            "columns": [
+                {
+                    "name": "company_id",
+                    "description": "unique identifier for each company",
+                    "dataType": "INTEGER"
+                },
+                {
+                    "name": "name",
+                    "description": "company name",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "ticker",
+                    "description": "company ticker",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "sector",
+                    "description": "company sector",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "industry",
+                    "description": "specific industry in which company operates",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "description",
+                    "description": "A brief description of company",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "ipo_date",
+                    "description": "date on which company had its initial public offering (IPO)",
+                    "dataType": "DATE"
+                },
+                {
+                    "name": "exchange",
+                    "description": "stock exchange where company's shares are traded",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "currencycode",
+                    "description": "code of currency in which company's financials are reported",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "country",
+                    "description": "country where company is headquartered",
+                    "dataType": "TEXT"
+                },
+                {
+                    "name": "city",
+                    "description": "city where company is headquartered",
+                    "dataType": "TEXT"
+                }
+            ]
+        },
+        {
+            "name": "income_statement",
+            "description": "Table 'income_statement' includes quarterly income statement data for each company in database",
+            "columns": [
+                {
+                    "name": "company_id",
+                    "description": "unique foreign key identifier"
+                },
+                {
+                    "name": "date",
+                    "description": "last date of quarter for income statement"
+                },
+                {
+                    "name": "research_and_dev",
+                    "description": "research and development spend"
+                },
+                {
+                    "name": "income_before_tax",
+                    "description": "income before tax"
+                },
+                {
+                    "name": "net_income",
+                    "description": "net income"
+                },
+                {
+                    "name": "selling_gen_and_admin",
+                    "description": "costs related to selling, general and administrative activities"
+                },
+                {
+                    "name": "selling_and_marketing_exp",
+                    "description": "selling and marketing expenses"
+                },
+                {
+                    "name": "gross_profit",
+                    "description": "gross profit"
+                },
+                {
+                    "name": "reconciled_depreciation",
+                    "description": "reconciled depreciation"
+                },
+                {
+                    "name": "ebit",
+                    "description": "earnings before interest and tax"
+                },
+                {
+                    "name": "ebitda",
+                    "description": "earnings before interest, tax, depreciation and amortization"
+                },
+                {
+                    "name": "depreciation_and_amortization",
+                    "description": "depreciation and amortization for period"
+                },
+                {
+                    "name": "operating_income",
+                    "description": "operating income"
+                },
+                {
+                    "name": "other_opex",
+                    "description": "other operating expenses"
+                },
+                {
+                    "name": "interest_expense",
+                    "description": "interest expenses"
+                },
+                {
+                    "name": "interest_income",
+                    "description": "interest income"
+                },
+                {
+                    "name": "income_tax_expense",
+                    "description": "income tax expense"
+                },
+                {
+                    "name": "total_revenue",
+                    "description": "total revenue"
+                },
+                {
+                    "name": "total_opex",
+                    "description": "total operating expenses"
+                },
+                {
+                    "name": "cost_of_rev",
+                    "description": "cost of revenue"
+                },
+                {
+                    "name": "net_income_from_cont_ops",
+                    "description": "net income from continuing operations"
+                },
+                {
+                    "name": "net_income_to_common",
+                    "description": "net income attributable to common shareholders"
+                }
+            ],
+            "defaultColumnType": "NUMERIC",
+            "defaultUnit": "Dollar",
+            "exceptions": [
+                {
+                    "name": "company_id",
+                    "description": "unique foreign key identifier",
+                    "dataType": "INTEGER"
+                },
+                {
+                    "name": "date",
+                    "description": "last date of quarter for income statement",
+                    "dataType": "DATE"
+                }
+            ]
+        },
+        {
+            "name": "balance_sheet",
+            "description": "Table 'balance_sheet' includes quarterly balance sheet data for each company in database",
+            "columns": [
+                {
+                    "name": "total_assets",
+                    "description": "total assets"
+                },
+                {
+                    "name": "intangible_assets",
+                    "description": "intangible assets"
+                },
+                {
+                    "name": "total_liab",
+                    "description": "total liabilities"
+                },
+                {
+                    "name": "other_liab",
+                    "description": "other liabilities"
+                },
+                {
+                    "name": "goodwill",
+                    "description": "goodwill"
+                },
+                {
+                    "name": "other_assets",
+                    "description": "other assets"
+                },
+                {
+                    "name": "cash",
+                    "description": "total cash"
+                },
+                {
+                    "name": "total_current_liab",
+                    "description": "total current liabilities"
+                },
+                {
+                    "name": "net_debt",
+                    "description": "net debt"
+                },
+                {
+                    "name": "ST_debt",
+                    "description": "short-term debt"
+                },
+                {
+                    "name": "total_debt",
+                    "description": "total debt"
+                },
+                {
+                    "name": "total_current_assets",
+                    "description": "total current assets"
+                },
+                {
+                    "name": "LT_investments",
+                    "description": "long-term investments"
+                },
+                {
+                    "name": "net_tangible_assets",
+                    "description": "net tangible assets"
+                },
+                {
+                    "name": "ST_investments",
+                    "description": "short-term investments"
+                },
+                {
+                    "name": "net_receivables",
+                    "description": "net receivables"
+                },
+                {
+                    "name": "inventory",
+                    "description": "inventory"
+                },
+                {
+                    "name": "accounts_payable",
+                    "description": "accounts payable"
+                },
+                {
+                    "name": "total_noncurrent_assets",
+                    "description": "total noncurrent assets"
+                },
+                {
+                    "name": "LT_debt",
+                    "description": "long-term debt"
+                },
+                {
+                    "name": "total_noncurrent_liab",
+                    "description": "total noncurrent liabilities"
+                },
+                {
+                    "name": "cash_and_equivalents",
+                    "description": "total cash and cash equivalents"
+                },
+                {
+                    "name": "net_property_plant_equip",
+                    "description": "net property, plant, and equipment"
+                }
+            ],
+            "defaultColumnType": "NUMERIC",
+            "defaultUnit": "Dollar",
+            "exceptions": [
+                {
+                    "name": "company_id",
+                    "description": "unique foreign key identifier",
+                    "dataType": "INTEGER"
+                },
+                {
+                    "name": "date",
+                    "description": "last date of quarter for income statement",
+                    "dataType": "DATE"
+                },
+                {
+                    "name": "shares_outstanding",
+                    "description": "number of shares outstanding",
+                    "dataType": "NUMERIC",
+                    "unit": "Shares"
+                }      
+            ]
+        },
+        {
+            "name": "cash_flow",
+            "description": "Table 'cash_flow' includes quarterly cash flow data for each company in database",
+            "columns": [
+                {
+                    "name": "investments",
+                    "description": "total investments made"
+                },
+                {
+                    "name": "change_liab",
+                    "description": "change in liabilities"
+                },
+                {
+                    "name": "total_cf_from_investing",
+                    "description": "total cash flow from investing activities"
+                },
+                {
+                    "name": "net_borrowings",
+                    "description": "net borrowings"
+                },
+                {
+                    "name": "total_cf_from_financing",
+                    "description": "total cash flow from financing activities"
+                },
+                {
+                    "name": "change_in_cash",
+                    "description": "change in cash and cash equivalents"
+                },
+                {
+                    "name": "begin_period_CF",
+                    "description": "cash and cash equivalents at beginning of period"
+                },
+                {
+                    "name": "end_period_CF",
+                    "description": "cash and cash equivalents at end of period"
+                },
+                {
+                    "name": "total_cf_from_ops",
+                    "description": "total cash flow from operating activities"
+                },
+                {
+                    "name": "depreciation",
+                    "description": "depreciation"
+                },
+                {
+                    "name": "other_cf_from_investing",
+                    "description": "other cash flows from investing"
+                },
+                {
+                    "name": "dividends_paid",
+                    "description": "dividends paid"
+                },
+                {
+                    "name": "change_inventory",
+                    "description": "change in inventory"
+                },
+                {
+                    "name": "change_account_receivables",
+                    "description": "change in account receivables"
+                },
+                {
+                    "name": "stock_sale_purch",
+                    "description": "net cash flow from sale or purchase of stock"
+                },
+                {
+                    "name": "other_cf_from_financing",
+                    "description": "other cash flows from financing"
+                },
+                {
+                    "name": "capex",
+                    "description": "capital expenditures"
+                },
+                {
+                    "name": "change_receivables",
+                    "description": "change in receivables"
+                },
+                {
+                    "name": "other_cf_from_ops",
+                    "description": "Other cash flows from operating"
+                },
+                {
+                    "name": "FX_change",
+                    "description": "effect of FX change"
+                },
+                {
+                    "name": "change_cash_and_equivalents",
+                    "description": "change in cash and cash equivalents"
+                },
+                {
+                    "name": "change_working_cap",
+                    "description": "change in working capital"
+                },
+                {
+                    "name": "stock_based_comp",
+                    "description": "expense related to stock-based compensation"
+                },
+                {
+                    "name": "other_noncash_items",
+                    "description": "other non-cash items"
+                },
+                {
+                    "name": "free_cash_flow",
+                    "description": "free cash flow"
+                }
+            ],
+            "defaultColumnType": "NUMERIC",
+            "defaultUnit": "Dollar",
+            "exceptions": [
+                {
+                    "name": "company_id",
+                    "description": "unique foreign key identifier",
+                    "dataType": "INTEGER"
+                },
+                {
+                    "name": "date",
+                    "description": "last date of quarter for income statement",
+                    "dataType": "DATE"
+                }
+            ]
+        },
+        {
+            "name": "daily_share_price",
+            "description": "Table 'daily_share_price' includes daily share price and volume for each company in database from beginning of 2018 to present",
+            "columns": [
+                {
+                    "name": "company_id",
+                    "description": "unique foreign key identifier for company to which daily share price pertains"
+                },
+                {
+                    "name": "date",
+                    "description": "date of record"
+                },
+                {
+                    "name": "share_price",
+                    "description": "share price"
+                },
+                {
+                    "name": "volume",
+                    "description": "volume of shares traded"
+                }
+            ],
+            "defaultColumnType": "NUMERIC",
+            "defaultUnit": "Dollar",
+            "exceptions": []
+        }
+    ],
+    "views": [
+        {
+            "name": "daily_market_data",
+            "description": "View 'daily_market_data' includes daily share price, market cap, enterprise value, and volume for each company in database from beginning of 2018 to present",
+            "columns": [
+                {
+                    "name": "company_id",
+                    "description": "unique foreign key identifier for company",
+                    "dataType": "INTEGER"
+                },
+                {
+                    "name": "date",
+                    "description": "date of record",
+                    "dataType": "DATE"
+                },
+                {
+                    "name": "share_price",
+                    "description": "share price",
+                    "dataType": "NUMERIC",
+                    "unit": "Dollar"
+                },
+                {
+                    "name": "shares_outstanding",
+                    "description": "shares outstanding",
+                    "dataType": "NUMERIC",
+                    "unit": "Shares"
+                },
+                {
+                    "name": "market_cap",
+                    "description": "market capitalization",
+                    "dataType": "NUMERIC",
+                    "unit": "Dollar"
+                },
+                {
+                    "name": "enterprise_value",
+                    "description": "enterprise value",
+                    "dataType": "NUMERIC",
+                    "unit": "Dollar"
+                }
+            ]
+        },
+        {
+            "name": "financial_summary",
+            "description": "View 'financial_summary' includes quarterly data on key financial metrics for each company in database",
+            "columns": [
+                {
+                    "name": "total_revenue",
+                    "description": "total revenue"
+                },
+                {
+                    "name": "net_income",
+                    "description": "net income"
+                },
+                {
+                    "name": "ebitda",
+                    "description": "ebitda"
+                },
+                {
+                    "name": "gross_profit",
+                    "description": "gross profit"
+                },
+                {
+                    "name": "total_assets",
+                    "description": "total assets"
+                },
+                {
+                    "name": "total_debt",
+                    "description": "total debt"
+                },
+                {
+                    "name": "cash_and_equivalents",
+                    "description": "cash and equivalents"
+                },
+                {
+                    "name": "free_cash_flow",
+                    "description": "free cash flow"
+                },
+                {
+                    "name": "capex",
+                    "description": "capital expenditures"
+                }
+            ],
+            "defaultColumnType": "NUMERIC",
+            "defaultUnit": "Dollar",
+            "exceptions": [
+                {
+                    "name": "company_id",
+                    "description": "unique foreign key identifier",
+                    "dataType": "INTEGER"
+                },
+                {
+                    "name": "date",
+                    "description": "last date of quarter for income statement",
+                    "dataType": "DATE"
+                }
+            ]
+        }
+    ],
+    "functions": [
+        {
+            "name": "calculate_ltm_ev_ebitda",
+            "description": "Function 'calculate_ltm_ev_ebitda' calculates the last twelve months (LTM) EV/EBITDA ratio for a given company and date. It takes the company_id and a specific date as parameters and returns a double precision value representing the LTM EV/EBITDA ratio.",
+            "returns": "double precision",
+            "parameters": [
+                {
+                    "name": "p_company_id",
+                    "type": "integer",
+                    "description": "unique foreign key identifier for company"
+                },
+                {
+                    "name": "p_date",
+                    "type": "date",
+                    "description": "date for which LTM EV/EBITDA is calculated"
+                }
+            ]
+        },
+        {
+            "name": "calculate_ltm_pe",
+            "description": "Function 'calculate_ltm_pe' calculates the last twelve months (LTM) P/E ratio for a given company and date. It takes the company_id and a specific date as parameters and returns a double precision value representing the LTM P/E ratio.",
+            "returns": "double precision",
+            "parameters": [
+                {
+                    "name": "p_company_id",
+                    "type": "integer",
+                    "description": "unique foreign key identifier for company"
+                },
+                {
+                    "name": "p_date",
+                    "type": "date",
+                    "description": "date for which LTM P/E is calculated"
+                }
+            ]
+        },
+        {
+            "name": "stock_performance",
+            "description": "Function 'stock_performance' calculates the stock performance for a given company within a date range. It takes the company_id and a start and end date as parameters and returns a double precision value representing the percent change in the stock price.",
+            "returns": "double precision",
+            "parameters": [
+                {
+                    "name": "p_company_id",
+                    "type": "integer",
+                    "description": "unique foreign key identifier for company"
+                },
+                {
+                    "name": "p_start_date",
+                    "type": "date",
+                    "description": "start date of performance period"
+                },
+                {
+                    "name": "p_end_date",
+                    "type": "date",
+                    "description": "end date of performance period"
+                }
+            ]
+        }
+    ]
+}
