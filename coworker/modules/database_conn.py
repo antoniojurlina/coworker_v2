@@ -1,6 +1,5 @@
 import psycopg2
-import pandas as pd
-from ..decorators.error_handling import handle_database_errors
+from coworker.decorators.error_handling import handle_database_errors
 
 class DatabaseConnection:
     _instance = None
@@ -27,8 +26,10 @@ class DatabaseConnection:
         cursor = connection.cursor()
         cursor.execute(query)
         rows = cursor.fetchall()
+        columns=[desc[0] for desc in cursor.description]
+        renamed_columns = {column: column.replace('_', ' ').title() for column in columns}
+        renamed_rows = [{column: value for column, value in zip(columns, row)} for row in rows]
+        renamed_data = {renamed_columns[column]: [row[column] for row in renamed_rows] for column in columns}
         cursor.close()
         connection.close()
-        # Convert rows to pandas DataFrame
-        df = pd.DataFrame(rows, columns=[desc[0] for desc in cursor.description])
-        return df
+        return renamed_data 
