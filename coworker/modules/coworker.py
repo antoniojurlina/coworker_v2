@@ -19,7 +19,7 @@ class Coworker:
             password=DB_PASSWORD
         )
         self.logger = Logger.get_instance(name="coworker_logger")
-        self.description_dict = self._load_schema_json()
+        self.description_json = self._load_schema_json()
         self.model = 'gpt-4'
         self.prompt_sql = f'''
             \n
@@ -37,7 +37,8 @@ class Coworker:
             You are a financial analyst and someone just sent you this message. They want to know how you
             would do this.
 
-            Reply to them with a one or two sentence response assuming you have the following at your disposal:
+            Ignoring  the fact that you do not actually have access to real-time data, 
+            reply to them with a one or two sentence generic response assuming you have the following at your disposal:
                 quarterly income statements, cash flow statements, balance sheets and daily share price data
         '''
         self._clear_cache_sql()
@@ -97,17 +98,17 @@ class Coworker:
         result = []
 
         result.append("Tables:")
-        for table in self.description_dict['tables']:
+        for table in self.description_json['tables']:
             fields = [column['name'] for column in table['columns']]
             result.append(f'  - "{table["name"]}" with the fields: {", ".join(fields)}')
 
         result.append("\nViews:")
-        for view in self.description_dict['views']:
+        for view in self.description_json['views']:
             fields = [column['name'] for column in view['columns']]
             result.append(f'  - "{view["name"]}" with the fields: {", ".join(fields)}')
 
         result.append("\nFunctions:")
-        for function in self.description_dict['functions']:
+        for function in self.description_json['functions']:
             result.append(f'  - {function["description"]}')
 
         return '\n'.join(result)
@@ -124,8 +125,7 @@ class Coworker:
     async def _fetch_data_with_retry(self, query, n=3):
         for _ in range(n):
             try:
-                df = self.database_conn.fetch_data(query)
-                return df.rename(columns={column:column.replace('_', ' ').title() for column in df.columns})
+                return self.database_conn.fetch_data(query)
             except ProgrammingErrorException as error:
                 self.logger.log_error(error=error)
                 error_message = f'''
@@ -159,7 +159,7 @@ class Coworker:
                 return query
 
         # Extract using regular SQL patterns if the initial extraction is empty
-        pattern = re.compile(r'\b(SELECT|WITH)\b.*?;', re.IGNORECASE)
+        pattern = re.compile(r'\b(SELECT|WITH)\b.*?;\s*$', re.IGNORECASE | re.DOTALL)
         match = pattern.search(answer)
         if match:
             return match.group()
@@ -173,10 +173,6 @@ class Coworker:
             if phrase in lower_answer_summary:
                 return "Sure! Here is the data you requested."
         return answer_summary
-    
-    def _process_df(self, df):
-        df = df.filter(regex="^(?!.*Id)")
-        return df
 
     async def generate_summary(self, request: str):
         if "thank you" in request.lower():
@@ -206,7 +202,7 @@ class Coworker:
         self.sql_messages_cache.append({"role": "assistant", "content": query})
 
         if data is not None:
-            return query, self._process_df(data)
+            return query, data
         else:
             return None, 'Apologies. I cannot figure out a way to answer this request.'
 
