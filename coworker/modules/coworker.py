@@ -1,15 +1,17 @@
 import tiktoken
 import re
 import json
+from eod import EodHistoricalData
 
 from coworker.exceptions.exceptions import ProgrammingErrorException
 from coworker.modules.chat_completion import OpenAIChatCompletionModule
 from coworker.modules.database_conn import DatabaseConnection
 from coworker.modules.logging import Logger
-from coworker.config.config import OPENAI_KEY, DB_HOST, DB_USER, DB_NAME, DB_PORT, DB_PASSWORD
+from coworker.config.config import OPENAI_KEY, DB_HOST, DB_USER, DB_NAME, DB_PORT, DB_PASSWORD, EOD_KEY
 
 class Coworker:
-    def __init__(self, open_ai_key=None, model=None, host=None, port=None, user=None, dbname=None, password=None):
+    def __init__(self):
+        # Clients
         self.chat_completion = OpenAIChatCompletionModule(open_ai_key=OPENAI_KEY)
         self.database_conn = DatabaseConnection(
             host=DB_HOST, 
@@ -18,8 +20,12 @@ class Coworker:
             dbname=DB_NAME, 
             password=DB_PASSWORD
         )
+        self.eod_client = EodHistoricalData(EOD_KEY)
         self.logger = Logger.get_instance(name="coworker_logger")
+
+        # Data
         self.description_json = self._load_schema_json()
+        self.companies_json = self._load_companies_json()
         self.model = 'gpt-4'
         self.prompt_sql = f'''
             \n
@@ -41,11 +47,18 @@ class Coworker:
             reply to them with a one or two sentence generic response assuming you have the following at your disposal:
                 quarterly income statements, cash flow statements, balance sheets and daily share price data
         '''
+
+        # Start with clean memories
         self._clear_cache_sql()
         self._clear_cache_summary()
 
+
     def _load_schema_json(self):
         with open('coworker/data/schema_description.json', 'r') as f:
+            return json.load(f)
+        
+    def _load_companies_json(self):
+        with open('coworker/data/companies.json', 'r') as f:
             return json.load(f)
 
     def _clear_cache_sql(self):
@@ -173,6 +186,58 @@ class Coworker:
             if phrase in lower_answer_summary:
                 return "Sure! Here is the data you requested."
         return answer_summary
+    
+    async def get_info_from_text(self, request: str):
+        text = re.sub('[^A-Za-z0-9& ]+', '', request)  # remove special characters
+        words_company = [word for word in text.split(' ') if len(word) >= 4]
+        words_ticker = [word for word in text.split(' ') if len(word) >= 2]
+        
+        tickers = []
+        for word in words_company:
+            for company, ticker in self.companies_json.items():
+                if word.lower() in company.lower():
+                    if ticker not in tickers:  # to avoid duplicate entries
+                        tickers.append(ticker)
+        
+        for word in words_ticker:
+            for company, ticker in self.companies_json.items():
+                if word == ticker:
+                    if ticker not in tickers:  # to avoid duplicate entries
+                        tickers.append(ticker)
+        
+        if not tickers:
+            return None
+
+        info_dict = {
+            'Code': [],
+            'Name': [],
+            'Exchange': [],
+            'CurrencyCode': [],
+            'Sector': [],
+            'Industry': [],
+            'Description': [],
+            'CEO': [],
+            'IPODate': [],
+            'Country': [],
+            'City': []
+        }
+
+        for ticker in tickers:
+            info = self.eod_client.get_fundamental_equity(ticker, filter_='General')
+            
+            info_dict['Code'].append(info['Code'])
+            info_dict['Name'].append(info['Name'])
+            info_dict['Exchange'].append(info['Exchange'])
+            info_dict['CurrencyCode'].append(info['CurrencyCode'])
+            info_dict['Sector'].append(info['Sector'])
+            info_dict['Industry'].append(info['Industry'])
+            info_dict['Description'].append(info['Description'])
+            info_dict['CEO'].append(info['Officers']['0'])
+            info_dict['IPODate'].append(info['IPODate'])
+            info_dict['Country'].append(info['AddressData']['Country'])
+            info_dict['City'].append(info['AddressData']['City'])
+
+        return info_dict
 
     async def generate_summary(self, request: str):
         if "thank you" in request.lower():
