@@ -4,6 +4,7 @@ pandas
 psycopg2
 aiohttp
 tiktoken
+eod
 fastapi
 pydantic
 uvicorn

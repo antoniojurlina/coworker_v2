@@ -13,6 +13,7 @@ pandas = "*"
 fastapi = "*"
 pydantic = "*"
 uvicorn = "*"
+eod = "*"
 
 [dev-packages]
 ipykernel = "*"
