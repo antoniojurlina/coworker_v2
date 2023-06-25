@@ -160,6 +160,16 @@ class Coworker:
 
                 self.logger.log_sql_query(sql_query=query)
         return None
+    
+    def _faang_handling(self, request, type):
+        if type == 'ticker':
+            faang_tickers = 'META AAPL AMZN NFLX GOOG'
+            pattern = re.compile(r'\bFAANG\b', re.IGNORECASE)
+            return pattern.sub(faang_tickers, request)
+        if type == 'company':
+            faang_tickers = 'Meta, Apple, Amazon, Netflix and Alphabet'
+            pattern = re.compile(r'\bFAANG\b', re.IGNORECASE)
+            return pattern.sub(faang_tickers, request)
 
     def _extract_query(self, answer):
         start = "```sql"
@@ -188,7 +198,8 @@ class Coworker:
         return answer_summary
     
     async def get_info_from_text(self, request: str):
-        text = re.sub('[^A-Za-z0-9& ]+', '', request)  # remove special characters
+        text = self._faang_handling(request, type='ticker')
+        text = re.sub('[^A-Za-z0-9& ]+', '', text)  # remove special characters
         words_company = [word for word in text.split(' ') if len(word) >= 4]
         words_ticker = [word for word in text.split(' ') if len(word) >= 2]
         
@@ -256,6 +267,7 @@ class Coworker:
         return summary
 
     async def process_query_and_data(self, request: str):
+        request = self._faang_handling(request, type='company')
         self._handle_sql_messages_cache(request, max_response_tokens=4000)
 
         answer_sql = await self.message_chatgpt(messages=self.sql_messages_cache, max_tokens=4000)
