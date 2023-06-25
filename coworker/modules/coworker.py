@@ -163,13 +163,11 @@ class Coworker:
     
     def _faang_handling(self, request, type):
         if type == 'ticker':
-            faang_tickers = 'META AAPL AMZN NFLX GOOG'
-            pattern = re.compile(r'\bFAANG\b', re.IGNORECASE)
-            return pattern.sub(faang_tickers, request)
+            replacement_text = 'META AAPL AMZN NFLX GOOG'
         if type == 'company':
-            faang_tickers = 'Meta, Apple, Amazon, Netflix and Alphabet'
-            pattern = re.compile(r'\bFAANG\b', re.IGNORECASE)
-            return pattern.sub(faang_tickers, request)
+            replacement_text = 'Meta, Apple, Amazon, Netflix and Alphabet'
+        pattern = re.compile(r'\bFAANG\b', re.IGNORECASE)
+        return pattern.sub(replacement_text, request)
 
     def _extract_query(self, answer):
         start = "```sql"
