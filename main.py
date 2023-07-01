@@ -1,8 +1,7 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from uuid import uuid4
+from typing import List, Dict
 
 from coworker.modules.coworker import Coworker
 
@@ -21,56 +20,38 @@ app.add_middleware(
 
 # Pydantic model for user input
 class UserInput(BaseModel):
-    user_input: str
+    message_history: List[Dict]
 
-# Conversations dictionary
-conversations = {}
-
-# Route for main page
-@app.get("/")
-async def read_main():
-    # Generate a unique conversation ID
-    conversation_id = str(uuid4())
-
-    # Instantiate a new Coworker instance for the conversation
-    conversations[conversation_id] = {
-        "coworker": Coworker(),
-        "messages": [],
-        "data": []
-    }
-
-    return {"conversation_id": conversation_id}
-
-# Route for processing user input and returning results
-@app.post("/answer_request/{conversation_id}")
-async def handle_request(conversation_id: str, item: UserInput):
-    user_input = item.user_input
-    # Check if the conversation ID is valid
-    if conversation_id not in conversations:
-        raise HTTPException(status_code=404, detail="Conversation not found")
-
-    # Get the Coworker instance for the conversation
-    coworker = conversations[conversation_id]["coworker"]
-
+# Route for getting a SQL query and data back
+@app.post("/process_query_and_data")
+async def process_query_and_data(item: UserInput):
     # Process the user's input
-    query, data, answer_summary = await coworker.answer_request(request=user_input)
+    query, data = await coworker.process_query_and_data(message_history=item.message_history)
 
-    if data is not None:
-        # Convert DataFrame to JSON if it's not None
-        data = data.to_dict(orient="records")
-        # data = data.to_json(orient="split")
-
-    # Save the user's message and the assistant's response in the conversation history
-    conversations[conversation_id]["messages"].extend([
-        {"role": "user", "content": user_input},
-        {"role": "assistant", "content": answer_summary}
-    ])
-    
     # Return the results
     return {
         "query": query,
         "data": data,
-        "answer_summary": answer_summary,
-        "conversation_id": conversation_id,
-        "body": conversations[conversation_id]["messages"]
+    }
+
+# Route for generating a summary of what had been done
+@app.post("/generate_summary")
+async def generate_summary(item: UserInput):
+    # Generate summary
+    summary = await coworker.generate_summary(message_history=item.message_history)
+
+    # Return the results
+    return {
+        "summary": summary,
+    }
+
+# Route for getting some general market data from user input
+@app.post("/get_info_from_text")
+async def get_info_from_text(item: UserInput):
+    # Process the user's input
+    data = await coworker.get_info_from_text(message_history=item.message_history)
+
+    # Return the results
+    return {
+        "data": data,
     }
